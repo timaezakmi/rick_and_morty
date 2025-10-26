@@ -17,6 +17,7 @@ class PersonRepositoryInpl implements PersonRepository {
   final PersonLocalDataSource localDataSource;
   final FavoritePersonLocalDataSource favoritePersonLocalDataSource;
   final NetworkInfo networkInfo;
+  int maxCachedPage = 1;
   PersonRepositoryInpl({
     required this.remoteDataSource,
     required this.localDataSource,

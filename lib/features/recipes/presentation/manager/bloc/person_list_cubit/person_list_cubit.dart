@@ -38,8 +38,18 @@ class PersonListCubit extends Cubit<PersonState> {
       (error) => emit(PersonError(message: _mapFailureToMessage(error))),
       (character) {
         page++;
+        final int checkLength = 20;
+        bool isDuplicate = false;
         final persons = (state as PersonLoading).oldPersonsList;
-        persons.addAll(character);
+        if (persons.length >= checkLength && character.length == checkLength) {
+          final lastElements = persons.sublist(persons.length - checkLength);
+          isDuplicate = _areListsEqual(lastElements, character);
+        }
+
+        if (!isDuplicate) {
+          persons.addAll(character);
+        }
+
         print('List length: ${persons.length.toString()}');
         emit(PersonLoaded(persons));
       },
@@ -89,5 +99,13 @@ class PersonListCubit extends Cubit<PersonState> {
       default:
         return 'Drift Error';
     }
+  }
+
+  bool _areListsEqual(List<PersonEntity> list1, List<PersonEntity> list2) {
+    if (list1.length != list2.length) return false;
+    for (int i = 0; i < list1.length; i++) {
+      if (list1[i].id != list2[i].id) return false;
+    }
+    return true;
   }
 }
